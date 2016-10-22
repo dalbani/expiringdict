@@ -27,13 +27,19 @@ except ImportError:
 
 class ExpiringDict(OrderedDict):
     def __init__(self, max_len, max_age_seconds):
-        assert max_age_seconds >= 0
-        assert max_len >= 0
-
         OrderedDict.__init__(self)
-        self.max_len = max_len
-        self.max_age = max_age_seconds
+
+        self.set_max_len(max_len)
+        self.set_max_age(max_age_seconds)
         self.lock = RLock()
+
+    def set_max_len(self, max_len):
+        assert max_len >= 0
+        self.max_len = max_len
+
+    def set_max_age(self, max_age_seconds):
+        assert max_age_seconds >= 0
+        self.max_age = max_age_seconds
 
     def __contains__(self, key):
         """ Return True if the dict has a key, else return False. """
